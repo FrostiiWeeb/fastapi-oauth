@@ -7,6 +7,7 @@ from .models import URL
 
 import aiohttp
 import asyncio
+import contextlib
 from typing import *
 from threading import Thread, Event
 from discord.utils import sleep_until
@@ -53,8 +54,9 @@ class OAuth2Session(object):
 	async def redirect(self):
 		url = URL(self, self.scope)
 		res : aiohttp.ClientResponse = await self.session.do_action("get", url=str(url))
+		await self.session.session.close()
 		await self.check_for_status(res, res.reason)
-		yield Redirection(str(url))
+		return Redirection(str(url))
 
 	async def check_for_status(self, response : aiohttp.ClientResponse, message : str):
 		if not response.status in (200, 201):

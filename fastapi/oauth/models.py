@@ -6,7 +6,7 @@ class URL(object):
 	def __init__(self, session, oauth_scope : Scope = None) -> None:
 		self.url = None
 		self.oauth_scope = oauth_scope
-		self.session : OAuth2Session = session
+		self.session = session
 
 	def __str__(self) -> str:
 		return self.__repr__()
