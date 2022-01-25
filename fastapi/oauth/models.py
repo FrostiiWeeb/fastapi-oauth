@@ -1,10 +1,9 @@
 from .scope import Scope
-from .session import OAuth2Session
 
 from typing import *
 
 class URL(object):
-	def __init__(self, session : OAuth2Session, oauth_scope : Scope = None) -> None:
+	def __init__(self, session, oauth_scope : Scope = None) -> None:
 		self.url = None
 		self.oauth_scope = oauth_scope
 		self.session : OAuth2Session = session

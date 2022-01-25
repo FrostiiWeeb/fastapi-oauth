@@ -23,7 +23,6 @@ setup(
     long_description=readme,
     long_description_content_type='text/markdown',
     author='Alex Hutz',
-    py_modules=['fastapi-oauth'],
-    packages=find_packages(),
+    packages=['fastapi.oauth'],
     install_requires=requirements,
 )

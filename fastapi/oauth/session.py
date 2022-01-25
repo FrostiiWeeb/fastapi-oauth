@@ -78,7 +78,7 @@ class OAuth2Session(object):
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
 		self.expires_in = int(json.get("expires_in"))
-		self.token = Token(json.get("access_token"))
+		self.token = Token(json.get("access_token"), self.expires_in)
 		return await self.start_wait()
 
 

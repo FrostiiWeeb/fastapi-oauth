@@ -1,6 +1,5 @@
 discord.py
 fastapi
-starlette
 datetime
 uvicorn
 uvloop
