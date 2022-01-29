@@ -21,6 +21,7 @@ class Session(object):
 		self.session = aiohttp.ClientSession()
 		method = getattr(self.session, method)
 		res = await method(*args, **kwargs)
+		await self.session.close()
 		return await res.json()
 
 class OAuth2Session(object):
@@ -54,7 +55,6 @@ class OAuth2Session(object):
 	async def redirect(self):
 		url = URL(self, self.scope)
 		res : aiohttp.ClientResponse = await self.session.do_action("get", url=str(url))
-		await self.session.session.close()
 		return Redirection(str(url))
 
 	async def check_for_status(self, response : aiohttp.ClientResponse, message : str):
@@ -74,7 +74,7 @@ class OAuth2Session(object):
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
 		res = await self.session.do_action("post", url=url, data = payload, headers = headers)
-		json = await res.json()
+		json = res
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
 		self.expires_in = int(json.get("expires_in"))
@@ -89,8 +89,7 @@ class OAuth2Session(object):
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/users/@me")
 		headers = {"Authorization": f"{self.token_type} {access_token}"}
 		res = await self.session.do_action("get", url=url, headers = headers)
-		json = await res.json()
-		return User(json)
+		return User(res)
 
 	async def fetch_user(self, access_token: str) -> User:
 		return await self._fetch_user(access_token)
@@ -108,7 +107,7 @@ class OAuth2Session(object):
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
 		res : aiohttp.ClientResponse = await self.session.do_action("post", url=url, data = payload, headers = headers)
-		json = await res.json()
+		json = res
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
 		self.expires_in = int(json.get("expires_in"))
