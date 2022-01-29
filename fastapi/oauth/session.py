@@ -25,6 +25,7 @@ class Session(object):
 		jes = await res.json()
 		if jes["message"]:
 			raise HTTPError(res, jes)
+		return jes
 
 class OAuth2Session(object):
 	"""
@@ -33,7 +34,7 @@ class OAuth2Session(object):
 	global DISCORD_API_FORMAT
 	global DISCORD_API_URL
 	DISCORD_API_URL = "https://discord.com/api"
-	DISCORD_API_FORMAT = "{}{}"
+	DISCORD_API_FORMAT = "https://discord.com/api{}"
 	def __init__(self, client_id : int, client_secret : str, redirect_uri : str, scope : Optional[Scope] = None) -> None:
 		self.client_id = client_id
 		self.client_secret = client_secret
@@ -88,7 +89,7 @@ class OAuth2Session(object):
 		return await self._get_token(code)
 
 	async def _fetch_user(self, access_token: str) -> User:
-		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/users/@me")
+		url = DISCORD_API_FORMAT.format("/users/@me")
 		headers = {"Authorization": f"{self.token_type} {access_token}"}
 		res = await self.session.do_action("get", url=url, headers = headers)
 		return User(res)
@@ -107,7 +108,7 @@ class OAuth2Session(object):
 
 		}
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
-		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
+		url = DISCORD_API_FORMAT.format("/oauth2/token/")
 		res : aiohttp.ClientResponse = await self.session.do_action("post", url=url, data = payload, headers = headers)
 		json = res
 		self.refresh_token = json.get("refresh_token")
