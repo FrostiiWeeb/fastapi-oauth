@@ -87,7 +87,7 @@ class OAuth2Session(object):
 	async def get_token(self, code : str):
 		return await self._get_token(code)
 
-	async def _fetch_user(self, access_token: str):
+	async def _fetch_user(self, access_token: str) -> User:
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/users/@me")
 		headers = {"Authorization": f"{self.token_type} {access_token}"}
 		res = await self.session.do_action("get", url=url, headers = headers)
@@ -95,12 +95,12 @@ class OAuth2Session(object):
 		json = await res.json()
 		return User(json)
 
-	async def fetch_user(self, access_token: str):
+	async def fetch_user(self, access_token: str) -> User:
 		return await self._fetch_user(access_token)
 
 	async def _refresh_token(self):
 		if not self.refresh_token:
-			raise OAuthError("Please run the `{}`".format(self.get_token.__name__), "self.refresh_token not set", 1)
+			raise OAuthError("Please run the `{}` coroutine".format(self.get_token.__name__), "self.refresh_token not set", 1)
 		payload = {
 			'client_id': self.client_id,
 			'client_secret': self.client_secret,
@@ -116,7 +116,8 @@ class OAuth2Session(object):
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
 		self.expires_in = int(json.get("expires_in"))
-		return Token(json.get("access_token"))
+		self.token = Token(json.get("access_token"))
+		return self.token
 
 	async def refresh(self):
 		return await self._refresh_token()
