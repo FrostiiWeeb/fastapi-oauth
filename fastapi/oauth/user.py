@@ -11,3 +11,4 @@ class User(object):
         self.public_flags = data.get('public_flags', 0)
         self.bot = data.get('bot', False)
         self.system = data.get('system', False)
+        self.email = data.get('email', None)
