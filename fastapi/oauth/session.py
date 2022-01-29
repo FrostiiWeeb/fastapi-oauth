@@ -25,6 +25,7 @@ class Session(object):
 		jes = await res.json()
 		if jes["message"]:
 			raise HTTPError(res, jes)
+		print(jes)
 		return jes
 
 class OAuth2Session(object):
