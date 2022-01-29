@@ -75,7 +75,7 @@ class OAuth2Session(object):
 			"scope": self.scope.scopes
 		}
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
-		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
+		url = DISCORD_API_FORMAT.format("/oauth2/token/")
 		res = await self.session.do_action("post", url=url, data = payload, headers = headers)
 		json = res
 		self.refresh_token = json.get("refresh_token")
