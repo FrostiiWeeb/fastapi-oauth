@@ -8,7 +8,7 @@ class Scope(object):
 
 	@property
 	def scopes(self):
-		return " ".join(self.__scopes)
+		return self._scopes
 
 	def __repr__(self) -> str:
 		return "<Scope {}>".format(" ".join([self.scopes]))

@@ -71,7 +71,6 @@ class OAuth2Session(object):
 			"grant_type": "authorization_code",
 			"code": code,
 			"redirect_uri": self.redirect_uri,
-			"scope": self.scope.scopes
 		}
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
 		url = self.url.format("/oauth2/token/")
