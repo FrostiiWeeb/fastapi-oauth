@@ -55,7 +55,6 @@ class OAuth2Session(object):
 		url = URL(self, self.scope)
 		res : aiohttp.ClientResponse = await self.session.do_action("get", url=str(url))
 		await self.session.session.close()
-		await self.check_for_status(res, res.reason)
 		return Redirection(str(url))
 
 	async def check_for_status(self, response : aiohttp.ClientResponse, message : str):
@@ -75,7 +74,6 @@ class OAuth2Session(object):
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
 		res = await self.session.do_action("post", url=url, data = payload, headers = headers)
-		await self.check_for_status(res, res.reason)
 		json = await res.json()
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
@@ -91,7 +89,6 @@ class OAuth2Session(object):
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/users/@me")
 		headers = {"Authorization": f"{self.token_type} {access_token}"}
 		res = await self.session.do_action("get", url=url, headers = headers)
-		await self.check_for_status(res, res.reason)
 		json = await res.json()
 		return User(json)
 
@@ -111,7 +108,6 @@ class OAuth2Session(object):
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
 		res : aiohttp.ClientResponse = await self.session.do_action("post", url=url, data = payload, headers = headers)
-		await self.check_for_status(res, res.reason)
 		json = await res.json()
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
