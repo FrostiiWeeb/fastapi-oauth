@@ -32,7 +32,7 @@ class OAuth2Session(object):
 	"""
 	global DISCORD_API_FORMAT
 	global DISCORD_API_URL
-	DISCORD_API_URL = "https://discord.com/api/v8"
+	DISCORD_API_URL = "https://discord.com/api"
 	DISCORD_API_FORMAT = "{}{}"
 	def __init__(self, client_id : int, client_secret : str, redirect_uri : str, scope : Optional[Scope] = None) -> None:
 		self.client_id = client_id
