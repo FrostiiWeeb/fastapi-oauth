@@ -22,7 +22,9 @@ class Session(object):
 		method = getattr(self.session, method)
 		res = await method(*args, **kwargs)
 		await self.session.close()
-		return await res.json()
+		jes = await res.json()
+		if jes["message"]:
+			raise HTTPError(res, jes)
 
 class OAuth2Session(object):
 	"""
@@ -75,7 +77,6 @@ class OAuth2Session(object):
 		url = DISCORD_API_FORMAT.format(DISCORD_API_URL, "/oauth2/token/")
 		res = await self.session.do_action("post", url=url, data = payload, headers = headers)
 		json = res
-		print(json)
 		self.refresh_token = json.get("refresh_token")
 		self.token_type = json.get("token_type")
 		self.expires_in = int(json.get("expires_in"))
