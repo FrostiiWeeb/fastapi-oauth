@@ -41,7 +41,7 @@ class OAuth2Session(object):
 		self.refresh_token = None
 		self.expires_in = 0.0
 		self._ev = Event()
-		self.url = "https://discord.com/api/v8{}"
+		self.url = "https://discord.com/api/v6{}"
 		self._aev = asyncio.Event()
 		self.session = Session()
 
