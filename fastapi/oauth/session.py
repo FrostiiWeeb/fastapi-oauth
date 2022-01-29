@@ -31,10 +31,7 @@ class OAuth2Session(object):
 	"""
 	A OAuth2 Session for the discord API. Uses the `Bearer` authentication type.
 	"""
-	global DISCORD_API_FORMAT
-	global DISCORD_API_URL
 	DISCORD_API_URL = "https://discord.com/api"
-	DISCORD_API_FORMAT = "https://discord.com/api{}"
 	def __init__(self, client_id : int, client_secret : str, redirect_uri : str, scope : Optional[Scope] = None) -> None:
 		self.client_id = client_id
 		self.client_secret = client_secret
@@ -43,6 +40,7 @@ class OAuth2Session(object):
 		self.refresh_token = None
 		self.expires_in = 0.0
 		self._ev = Event()
+		self.url = "https://discord.com/api{}"
 		self._aev = asyncio.Event()
 		self.session = Session()
 
@@ -75,7 +73,7 @@ class OAuth2Session(object):
 			"scope": self.scope.scopes
 		}
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
-		url = DISCORD_API_FORMAT.format("/oauth2/token/")
+		url = self.url.format("/oauth2/token/")
 		res = await self.session.do_action("post", url=url, data = payload, headers = headers)
 		json = res
 		self.refresh_token = json.get("refresh_token")
@@ -89,7 +87,7 @@ class OAuth2Session(object):
 		return await self._get_token(code)
 
 	async def _fetch_user(self, access_token: str) -> User:
-		url = DISCORD_API_FORMAT.format("/users/@me")
+		url = self.url.format("/users/@me")
 		headers = {"Authorization": f"{self.token_type} {access_token}"}
 		res = await self.session.do_action("get", url=url, headers = headers)
 		return User(res)
@@ -108,7 +106,7 @@ class OAuth2Session(object):
 
 		}
 		headers = {"Content-Type": 'application/x-www-form-urlencoded'}
-		url = DISCORD_API_FORMAT.format("/oauth2/token/")
+		url = self.url.format("/oauth2/token/")
 		res : aiohttp.ClientResponse = await self.session.do_action("post", url=url, data = payload, headers = headers)
 		json = res
 		self.refresh_token = json.get("refresh_token")
